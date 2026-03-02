@@ -89,49 +89,51 @@ const HeroSection = () => {
   };
 
   return (
-    <>
-      <section className="relative w-full h-screen overflow-hidden">
-        {/* ── Background images (absolute, behind everything) ── */}
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={current}
-            custom={direction}
-            variants={bgVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
-            className="absolute inset-0 z-0"
-          >
-            <img
-              src={slide.image}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            {/* Cinematic overlays */}
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
-          </motion.div>
-        </AnimatePresence>
+    <section className="relative w-full h-screen pt-20 flex flex-col">
+      {/* ── Background images (absolute, behind everything) ── */}
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={current}
+          custom={direction}
+          variants={bgVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+          className="absolute inset-0 z-0"
+        >
+          <img
+            src={slide.image}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Cinematic overlays */}
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
+        </motion.div>
+      </AnimatePresence>
 
-        {/* ── Slide text content (centered) ── */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-5 text-center w-full px-6"
-          >
-            <div className="max-w-3xl mx-auto">
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight mb-5 text-white w-full text-center">
+      {/* ── Main content area (flex-grow, vertically centered) ── */}
+      <div className="relative z-10 flex-1 flex items-center justify-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 w-full flex justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="max-w-3xl text-center flex flex-col items-center"
+            >
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight mb-5 text-white">
                 {slide.headline}
               </h1>
 
-              <p className="text-lg md:text-xl text-white/75 font-medium italic mb-8 w-full text-center">
+              <p className="text-lg md:text-xl text-white/75 font-medium italic mb-8">
                 {slide.subheadline}
               </p>
+
+
 
               <a
                 href={slide.ctaHref}
@@ -140,47 +142,49 @@ const HeroSection = () => {
                 {slide.cta}
                 <span className="text-lg">→</span>
               </a>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* ── Left arrow button ── */}
-        <button
-          onClick={prev}
-          className="absolute left-5 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/15 transition-all"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft className="w-4 h-4 text-white" />
-        </button>
-
-        {/* ── Right arrow button ── */}
-        <button
-          onClick={next}
-          className="absolute right-5 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/15 transition-all"
-          aria-label="Next slide"
-        >
-          <ChevronRight className="w-4 h-4 text-white" />
-        </button>
-
-        {/* ── Dots/indicators (at bottom) ── */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex items-center gap-3">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                i === current ? "w-10 bg-primary" : "w-4 bg-white/25 hover:bg-white/45"
-              }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-          <span className="ml-3 text-xs text-white/35 font-mono">
-            {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
-          </span>
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </section>
+      </div>
 
-      {/* ── Stats bar (outside hero section) ── */}
+      {/* ── Controls row (not overlapping content) ── */}
+      <div className="relative z-20 px-6 md:px-12 lg:px-24 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${i === current ? "w-10 bg-primary" : "w-4 bg-white/25 hover:bg-white/45"
+                  }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+            <span className="ml-3 text-xs text-white/35 font-mono">
+              {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={prev}
+              className="w-10 h-10 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/15 transition-all"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-4 h-4 text-white" />
+            </button>
+            <button
+              onClick={next}
+              className="w-10 h-10 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/15 transition-all"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Stats bar (at the very bottom, no overlap) ── */}
       <div className="relative z-20 border-t border-white/10 bg-black/50 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 py-5 grid grid-cols-3 gap-6">
           {[
@@ -199,7 +203,7 @@ const HeroSection = () => {
           ))}
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
